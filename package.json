@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/ShyqeriTari/strive-benchmark-m5-d10#readme",
   "dependencies": {
+    "cloudinary": "^1.28.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
@@ -29,6 +30,7 @@
     "fs-extra": "^10.0.1",
     "http-errors": "^2.0.0",
     "multer": "^1.4.4",
+    "multer-storage-cloudinary": "^4.0.0",
     "uniqid": "^5.4.0"
   },
   "devDependencies": {

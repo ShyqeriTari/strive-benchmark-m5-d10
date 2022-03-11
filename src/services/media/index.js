@@ -8,6 +8,10 @@ import { newReviewValidation } from "./reviewValidation.js"
 import createHttpError from "http-errors"
 import { validationResult } from "express-validator"
 
+import { CloudinaryStorage } from "multer-storage-cloudinary"
+import { v2 as cloudinary } from "cloudinary"
+import multer from "multer"
+
 const mediaJSONpath = join(dirname(fileURLToPath(import.meta.url)), "media.json")
 
 const getMedia = () => JSON.parse(fs.readFileSync(mediaJSONpath))
@@ -21,6 +25,14 @@ const getReview = () => JSON.parse(fs.readFileSync(reviewJSONpath))
 const writeReview = content => fs.writeFileSync(reviewJSONpath, JSON.stringify(content))
 
 const mediaRouter = express.Router()
+
+const cloudStorageMedia = new CloudinaryStorage({
+    cloudinary,
+    params: {
+      folder: "netflixM5",
+    },
+  })
+  const cloudMulterMedia = multer({ storage: cloudStorageMedia })
 
 mediaRouter.post("/", newMediaValidation, (req, res, next) => {
     try {
@@ -144,6 +156,33 @@ mediaRouter.delete("/:reviewId/reviews", (req, res, next) => {
         next(error)
     }
 })
+
+mediaRouter.post("/:mediaId/poster", cloudMulterMedia.single("poster"), async (req, res, next) => {
+    try {
+  
+      const mediaArray = await getMedia()
+  
+      const index = mediaArray.findIndex(media => media.imdbID === req.params.mediaId)
+  
+      if (index !== -1) {
+  
+        const oldMedia = mediaArray[index]
+  
+        const updatedMedia = { ...oldMedia, Poster: req.file.path }
+  
+        mediaArray[index] = updatedMedia
+  
+        await writeMedia(mediaArray)
+  
+        res.send("Uploaded blogs on Cloudinary!")
+      } else {
+        next(createHttpError(404))
+      }
+    } catch (error) {
+      next(error)
+      console.log(error)
+    }
+  })
 
 
 export default mediaRouter
