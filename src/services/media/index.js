@@ -202,8 +202,12 @@ mediaRouter.post("/:mediaId/poster", cloudMulterMedia.single("poster"), async (r
       const [extension] = fileName.split(".");
       const base64 = response.data.toString("base64");
       const base64Image = `data:image/${extension};base64,${base64}`;
+
+      const reviewArray = getReview()
+
+      const singleMediaReview = reviewArray.filter(review => review._id === req.params.mediaId)
   
-      const source = getPDFstream(thisMedia.Title, thisMedia.Year, base64Image)
+      const source = getPDFstream(thisMedia.Title, thisMedia.Year, singleMediaReview.map(review => "Comment: " + review.comment + " - Rate: "+ review.rate), base64Image)
   
       const destination = res
   

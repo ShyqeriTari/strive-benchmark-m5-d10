@@ -1,6 +1,6 @@
 import PdfPrinter from "pdfmake"
 
-export const getPDFstream = (header, text, imageUrl) => {
+export const getPDFstream = (header, text, reviews, imageUrl) => {
 
    const fonts = {
         Helvetica: {
@@ -20,11 +20,16 @@ export const getPDFstream = (header, text, imageUrl) => {
                     fit: [520, 520]
                 },
                 {
-                    text: header,
+                    text: header + " - " + text,
                     style: 'header',
                     
                 },
-                text,
+                {
+                    text: "Reviews:",
+                    style: 'header2',
+                    
+                },
+                reviews,
             ],
 
             styles: {
@@ -33,6 +38,11 @@ export const getPDFstream = (header, text, imageUrl) => {
                     bold: true,
                     margin: [0,8]
                 },
+                header2: {
+                    fontSize: 14,
+                    bold: true,
+                    margin: [0,6]
+                }
             
         },
         defaultStyle:{
