@@ -24,5 +24,5 @@ server.use(cors({origin: function(origin, next){
 console.table(listEndpoints(server))
 
 server.listen(port, () => {
-    console.log("🟢 Server is listening on port: ", port)
+    console.log("🟢 Server is listening on port:", port)
 })
