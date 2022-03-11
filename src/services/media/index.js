@@ -59,9 +59,8 @@ mediaRouter.get("/:mediaId", (req, res, next) => {
 
 mediaRouter.put("/:mediaId", newMediaValidation, (req, res, next) => {
 
-  try{ const mediaArray = getMedia()
-        const errorGroup = validationResult(req)
-        if(errorGroup.isEmpty()){
+  try{ 
+            const mediaArray = getMedia()
 
             const index = mediaArray.findIndex(media => media.imdbID === req.params.mediaId)
 
@@ -74,12 +73,26 @@ mediaRouter.put("/:mediaId", newMediaValidation, (req, res, next) => {
             writeMedia(mediaArray)
 
             res.status(201).send({updatedMedia})
-        } else {
-            next(createHttpError(400, "Some errors occurred in req body", {errorGroup}))
-        }}
+  }
         catch (error){
             next(error)
         }
+})
+
+mediaRouter.delete("/:mediaId", (req, res, next) => {
+    try {
+
+        const mediaArray = getMedia()
+
+        const remainingMedia = mediaArray.filter(media => media.imdbID !== req.params.mediaId)
+
+        fs.writeFileSync( mediaJSONpath, JSON.stringify(remainingMedia))
+
+        res.status(204).send("Deleted successfully")
+        
+    } catch (error) {
+        next(error)
+    }
 })
 
 
