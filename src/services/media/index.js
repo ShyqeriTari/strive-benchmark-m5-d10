@@ -35,6 +35,14 @@ mediaRouter.post("/", newMediaValidation, (req, res, next) => {
     }
 })
 
+mediaRouter.get("/", (req, res, next) => {
+    try {
+        const mediaArray = getMedia()
 
+        res.send(mediaArray)
+    } catch (error) {
+        next(error)
+    }
+})
 
 export default mediaRouter
