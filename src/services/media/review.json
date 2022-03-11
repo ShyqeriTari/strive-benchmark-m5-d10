@@ -1,1 +1,16 @@
-[]
+[
+    {
+        "_id": "491a5f0l0mc6x40",
+        "comment": "A very bad movie",
+        "rate": 1,
+        "elementId": "491a9a2l0mf8hmc",
+        "createdAt": "2022-03-11T12:54:52.211Z"
+    },
+    {
+        "_id": "491a5f0l0mc6x40",
+        "comment": "A very good movie",
+        "rate": 4,
+        "elementId": "491a9a2l0mf8xkb",
+        "createdAt": "2022-03-11T12:55:12.875Z"
+    }
+]

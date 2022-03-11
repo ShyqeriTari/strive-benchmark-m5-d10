@@ -77,7 +77,12 @@ mediaRouter.get("/", (req, res, next) => {
 mediaRouter.get("/:mediaId", (req, res, next) => {
     try {
         const mediaArray = getMedia()
+
         const singleMedia = mediaArray.find( media => media.imdbID === req.params.mediaId)
+
+        // const reviewArray = getReview()
+
+        // const singleMediaReview = reviewArray.find(review => review._id === req.params.mediaId)
 
         res.send(singleMedia)
 
