@@ -45,4 +45,42 @@ mediaRouter.get("/", (req, res, next) => {
     }
 })
 
+mediaRouter.get("/:mediaId", (req, res, next) => {
+    try {
+        const mediaArray = getMedia()
+        const singleMedia = mediaArray.find( media => media.imdbID === req.params.mediaId)
+
+        res.send(singleMedia)
+
+    } catch (error) {
+        next(error)
+    }
+})
+
+mediaRouter.put("/:mediaId", newMediaValidation, (req, res, next) => {
+
+  try{ const mediaArray = getMedia()
+        const errorGroup = validationResult(req)
+        if(errorGroup.isEmpty()){
+
+            const index = mediaArray.findIndex(media => media.imdbID === req.params.mediaId)
+
+            const oldMedia = mediaArray[index]
+
+            const updatedMedia = { ...oldMedia, ...req.body }
+
+            mediaArray[index] =  updatedMedia
+
+            writeMedia(mediaArray)
+
+            res.status(201).send({updatedMedia})
+        } else {
+            next(createHttpError(400, "Some errors occurred in req body", {errorGroup}))
+        }}
+        catch (error){
+            next(error)
+        }
+})
+
+
 export default mediaRouter
