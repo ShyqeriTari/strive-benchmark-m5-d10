@@ -7,10 +7,12 @@ import { newMediaValidation } from "./mediaValidation.js"
 import { newReviewValidation } from "./reviewValidation.js"
 import createHttpError from "http-errors"
 import { validationResult } from "express-validator"
-
 import { CloudinaryStorage } from "multer-storage-cloudinary"
 import { v2 as cloudinary } from "cloudinary"
 import multer from "multer"
+import { getPDFstream } from "../../lib/pdf-tools.js"
+import { pipeline } from "stream"
+import axios from "axios"
 
 const mediaJSONpath = join(dirname(fileURLToPath(import.meta.url)), "media.json")
 
@@ -180,6 +182,35 @@ mediaRouter.post("/:mediaId/poster", cloudMulterMedia.single("poster"), async (r
       }
     } catch (error) {
       next(error)
+      console.log(error)
+    }
+  })
+
+  mediaRouter.get("/:mediaId/pdf", async (req, res) => {
+
+    try {
+      const mediaArray = getMedia()
+      const index = mediaArray.findIndex(media => media.imdbID === req.params.mediaId)
+      const thisMedia = mediaArray[index]
+      res.setHeader("Content-Disposition", `attachment; filename=${thisMedia.title}.pdf`)
+  
+      const response = await axios.get(thisMedia.Poster, {
+        responseType: "arraybuffer",
+      })
+      const mediaPosterURLParts = thisMedia.Poster.split("/");
+      const fileName = mediaPosterURLParts[mediaPosterURLParts.length - 1];
+      const [extension] = fileName.split(".");
+      const base64 = response.data.toString("base64");
+      const base64Image = `data:image/${extension};base64,${base64}`;
+  
+      const source = getPDFstream(thisMedia.Title, thisMedia.Year, base64Image)
+  
+      const destination = res
+  
+      pipeline(source, destination, err => {
+        console.log(err)
+      })
+    } catch (error) {
       console.log(error)
     }
   })
