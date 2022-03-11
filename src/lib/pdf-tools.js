@@ -2,59 +2,59 @@ import PdfPrinter from "pdfmake"
 
 export const getPDFstream = (header, text, reviews, imageUrl) => {
 
-   const fonts = {
+    const fonts = {
         Helvetica: {
-          normal: 'Helvetica',
-          bold: 'Helvetica-Bold',
+            normal: 'Helvetica',
+            bold: 'Helvetica-Bold',
         }
-      };
-      
-     const printer = new PdfPrinter(fonts);
-      
+    };
+
+    const printer = new PdfPrinter(fonts);
+
     const docDefinition = {
 
-            content: [
-        
-                {
-                    image: imageUrl,
-                    width:300
-                },
-                {
-                    text: header + " - " + text,
-                    style: 'header',
-                    
-                },
-                {
-                    text: "Reviews:",
-                    style: 'header2',
-                    
-                },
-                reviews,
-            ],
+        content: [
 
-            styles: {
-                header: {
-                    fontSize: 18,
-                    bold: true,
-                    margin: [0,8]
-                },
-                header2: {
-                    fontSize: 14,
-                    bold: true,
-                    margin: [0,6]
-                }
-            
+            {
+                image: imageUrl,
+                width: 300
+            },
+            {
+                text: header + " - " + text,
+                style: 'header',
+
+            },
+            {
+                text: "Reviews:",
+                style: 'header2',
+
+            },
+            reviews,
+        ],
+
+        styles: {
+            header: {
+                fontSize: 18,
+                bold: true,
+                margin: [0, 8]
+            },
+            header2: {
+                fontSize: 14,
+                bold: true,
+                margin: [0, 6]
+            }
+
         },
-        defaultStyle:{
+        defaultStyle: {
             font: "Helvetica"
         }
-        
-      };
-      
-      
-     const pdfStream = printer.createPdfKitDocument(docDefinition, {});
-    
-      pdfStream.end()
+
+    };
+
+
+    const pdfStream = printer.createPdfKitDocument(docDefinition, {});
+
+    pdfStream.end()
     return pdfStream
 
 }
