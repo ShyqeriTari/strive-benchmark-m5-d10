@@ -17,7 +17,7 @@ export const getPDFstream = (header, text, reviews, imageUrl) => {
         
                 {
                     image: imageUrl,
-                    fit: [520, 520]
+                    width:300
                 },
                 {
                     text: header + " - " + text,
