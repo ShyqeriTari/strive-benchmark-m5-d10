@@ -136,6 +136,12 @@ mediaRouter.delete("/:mediaId", (req, res, next) => {
 
         fs.writeFileSync(mediaJSONpath, JSON.stringify(remainingMedia))
 
+        const reviewArray = getReview()
+
+        const remainingReview = reviewArray.filter(review => review._id !== req.params.mediaId)
+
+        fs.writeFileSync(reviewJSONpath, JSON.stringify(remainingReview))
+
         res.status(204).send("Deleted successfully")
 
     } catch (error) {
