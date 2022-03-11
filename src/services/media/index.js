@@ -80,11 +80,11 @@ mediaRouter.get("/:mediaId", (req, res, next) => {
 
         const singleMedia = mediaArray.find( media => media.imdbID === req.params.mediaId)
 
-        // const reviewArray = getReview()
+        const reviewArray = getReview()
 
-        // const singleMediaReview = reviewArray.find(review => review._id === req.params.mediaId)
+        const singleMediaReview = reviewArray.filter(review => review._id === req.params.mediaId)
 
-        res.send(singleMedia)
+        res.send({singleMedia, singleMediaReview})
 
     } catch (error) {
         next(error)
