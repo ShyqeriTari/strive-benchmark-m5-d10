@@ -5,6 +5,7 @@ import mediaRouter from "./services/media/index.js";
 import { badRequestHandler, unauthorizedHandler, notFoundHandler, genericErrorHandler } from "./errorHandlers.js"
 import swaggerUI from "swagger-ui-express"
 import yamljs from "yamljs"
+import {join} from "path"
 
 
 const server = express()
