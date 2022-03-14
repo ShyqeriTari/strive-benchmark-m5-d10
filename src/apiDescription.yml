@@ -4,10 +4,10 @@ info:
   description: The API's contained in this document were developed during Strive school Full stack course.
   version: 1.0.0
 servers:
-  - url: http://localhost:3001
-    description: Local server
   - url: https://benchmark-m5-d10.herokuapp.com
     description: Deployed server
+  - url: http://localhost:3001
+    description: Local server
 tags:
   - name: media
     description: Operations about medias
