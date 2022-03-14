@@ -1,0 +1,315 @@
+openapi: 3.0.1
+info:
+  title: Strive homework module 5 day 10 / Benchmark
+  description: The API's contained in this document were developed during Strive school Full stack course.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Local server
+  - url: https://benchmark-m5-d10.herokuapp.com
+    description: Deployed server
+tags:
+  - name: media
+    description: Operations about medias
+  - name: review
+    description: Operations about reviews
+paths:
+  /media:
+    get:
+      tags:
+        - media
+      summary: Returns a list of all media and all reviews.
+      description: The media and reviews are in different json files and related by _id.
+      responses:
+        '200':
+          description: A list of media and reviews
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/media'
+        '500':
+          $ref: '#/components/responses/GenericServerError'
+    post:
+      tags:
+        - media
+      summary: Create
+      description: Adds a new media
+      requestBody:
+        description: The object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/mediap'
+      responses:
+        '201':
+          description: The newly created media
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/GenericServerError'
+  /media/{mediaId}:
+    get:
+      tags:
+        - media
+      summary: Get by Id
+      description: Retrieve single media with related reviews
+      parameters:
+        - in: path
+          name: mediaId
+          required: true
+          schema:
+            type: string
+          description: The ID of the Media to retrieve
+      responses:
+        '200':
+          description: The single media with related reviews
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/media'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/GenericServerError'         
+    put:
+      tags:
+        - media
+      description: Update an existing media
+      summary: Update
+      parameters:
+        - in: path
+          name: mediaId
+          required: true
+          schema:
+            type: string
+          description: The ID of the media to update
+      requestBody:
+        description: Fields to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/mediap'
+      responses:
+        '200':
+          description: The modified media
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/media'
+        '400':
+          $ref: '#/components/responses/BadRequest'                  
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/GenericServerError'          
+    delete:
+      tags:
+        - media
+      summary: Delete
+      description: Delete a specific media and related reviews by ID
+      parameters:
+        - in: path
+          name: mediaId
+          required: true
+          schema:
+            type: string
+          description: The ID of the media to delete
+      responses:
+        '204':
+          description: Empty Response
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/GenericServerError'          
+  /media/{mediaId}/poster:
+    post:
+      tags:
+        - media
+      summary: Modify poster
+      description: Modify a specific media poster 
+      parameters:
+        - in: path
+          name: mediaId
+          required: true
+          schema:
+            type: string
+          description: The ID of the media to update
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Ok
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /media/{mediaId}/pdf:
+    get:
+      tags:
+        - media
+      summary: Download media pdf by Id
+      description: Download pdf of single media with related reviews
+      parameters:
+        - in: path
+          name: mediaId
+          required: true
+          schema:
+            type: string
+          description: The ID of the Media to retrieve
+      responses:
+        '200':
+          description: A PDF file
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/GenericServerError'  
+  /media/{mediaId}/reviews:
+    post:
+      tags:
+        - review
+      summary: Create
+      description: Adds a new review
+      parameters:
+        - in: path
+          name: mediaId
+          required: true
+          schema:
+            type: string
+          description: The ID of the media to review
+      requestBody:
+        description: The object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/reviewp'
+      responses:
+        '201':
+          description: The newly created review
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/GenericServerError'
+  /media/{reviewId}/reviews:
+    delete:
+      tags:
+        - review
+      summary: Delete
+      description: Delete a specific review by Id
+      parameters:
+        - in: path
+          name: reviewId
+          required: true
+          schema:
+            type: string
+          description: The ID of the review to delete      
+      operationId: ''
+      responses:
+        '204':
+          description: No Content
+        '404':
+          $ref: '#/components/responses/NotFound'          
+        '500':
+          $ref: '#/components/responses/GenericServerError'
+components:
+  responses:
+    NotFound:
+      description: The specific resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Some problems with your request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Bearer token missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    GenericServerError:
+      description: A problem on the server occurred
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    media:
+      type: object
+      properties:
+        imdbID:
+          type: string
+        Title:
+          type: string
+        Year:
+          type: string
+        Type:
+          type: string
+        Poster:
+          type: string
+    mediap:
+      type: object
+      properties:
+        Title:
+          type: string
+        Year:
+          type: string
+        Type:
+          type: string
+        Poster:
+          type: string
+    review:
+      type: object
+      properties:
+        _id:
+          type: string
+        comment:
+          type: string
+        rate:
+          type: string
+        elementId:
+          type: string
+        createdAt:
+          type: string     
+    reviewp:
+      type: object
+      properties:
+        _id:
+          type: string
+        comment:
+          type: string
+        rate:
+          type: string
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: false
+        message:
+          type: string

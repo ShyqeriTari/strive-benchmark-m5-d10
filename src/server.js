@@ -3,10 +3,15 @@ import cors from "cors"
 import listEndpoints from "express-list-endpoints"
 import mediaRouter from "./services/media/index.js";
 import { badRequestHandler, unauthorizedHandler, notFoundHandler, genericErrorHandler } from "./errorHandlers.js"
+import swaggerUI from "swagger-ui-express"
+import yamljs from "yamljs"
+
 
 const server = express()
 
 const port = process.env.PORT
+
+const yamlDocument = yamljs.load(join(process.cwd(), "./src/apiDescription.yml"))
 
 const corsOrigin = [process.env.PROD, process.env.FE]
 
@@ -23,6 +28,7 @@ server.use(cors({
 }))
 
 server.use("/media", mediaRouter)
+server.use("/docs", swaggerUI.serve, swaggerUI.setup(yamlDocument))
 
 server.use(badRequestHandler)
 server.use(unauthorizedHandler)
